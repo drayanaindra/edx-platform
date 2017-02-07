@@ -6,53 +6,67 @@ define([
     'js/learner_dashboard/views/program_card_view'
 ], function(Backbone, $, ProgressCollection, ProgramModel, ProgramCardView) {
     'use strict';
-        /* jslint maxlen: 500 */
+    /* jslint maxlen: 500 */
 
     describe('Program card View', function() {
         var view = null,
             programModel,
             program = {
-                category: 'FooBar',
-                status: 'active',
-                subtitle: 'program 1',
-                name: 'test program 1',
-                organizations: [
-                    {
-                        display_name: 'edX',
-                        key: 'edx'
+                uuid: 'a87e5eac-3c93-45a1-a8e1-4c79ca8401c8',
+                title: 'Food Security and Sustainability',
+                subtitle: 'Learn how to feed all people in the world in a sustainable way.',
+                type: 'XSeries',
+                detail_url: 'https://www.edx.org/foo/bar',
+                banner_image: {
+                    medium: {
+                        height: 242,
+                        width: 726,
+                        url: 'https://dphy0qlkz2ftb.cloudfront.net/media/programs/banner_images/a87e5eac-3c93-45a1-a8e1-4c79ca8401c8.medium.jpg'
+                    },
+                    'x-small': {
+                        height: 116,
+                        width: 348,
+                        url: 'https://dphy0qlkz2ftb.cloudfront.net/media/programs/banner_images/a87e5eac-3c93-45a1-a8e1-4c79ca8401c8.x-small.jpg'
+                    },
+                    small: {
+                        height: 145,
+                        width: 435,
+                        url: 'https://dphy0qlkz2ftb.cloudfront.net/media/programs/banner_images/a87e5eac-3c93-45a1-a8e1-4c79ca8401c8.small.jpg'
+                    },
+                    large: {
+                        height: 480,
+                        width: 1440,
+                        url: 'https://dphy0qlkz2ftb.cloudfront.net/media/programs/banner_images/a87e5eac-3c93-45a1-a8e1-4c79ca8401c8.large.jpg'
                     }
-                ],
-                created: '2016-03-03T19:18:50.061136Z',
-                modified: '2016-03-25T13:45:21.220732Z',
-                marketing_slug: 'p_2?param=haha&test=b',
-                id: 146,
-                detail_url: 'http://courses.edx.org/dashboard/programs/1/foo',
-                banner_image_urls: {
-                    w348h116: 'http://www.edx.org/images/test1',
-                    w435h145: 'http://www.edx.org/images/test2',
-                    w726h242: 'http://www.edx.org/images/test3'
-                }
+                },
+                authoring_organizations: [
+                    {
+                        uuid: '0c6e5fa2-96e8-40b2-9ebe-c8b0df2a3b22',
+                        key: 'WageningenX',
+                        name: 'Wageningen University & Research'
+                    }
+                ]
             },
             userProgress = [
                 {
-                    id: 146,
-                    completed: ['courses', 'the', 'user', 'completed'],
-                    in_progress: ['in', 'progress'],
-                    not_started: ['courses', 'not', 'yet', 'started']
+                    uuid: 'a87e5eac-3c93-45a1-a8e1-4c79ca8401c8',
+                    completed: 4,
+                    in_progress: 2,
+                    not_started: 4
                 },
                 {
-                    id: 147,
-                    completed: ['Course 1'],
-                    in_progress: [],
-                    not_started: ['Course 2', 'Course 3', 'Course 4']
+                    uuid: '91d144d2-1bb1-4afe-90df-d5cff63fa6e2',
+                    completed: 1,
+                    in_progress: 0,
+                    not_started: 3
                 }
             ],
             progressCollection = new ProgressCollection(),
             cardRenders = function($card) {
                 expect($card).toBeDefined();
-                expect($card.find('.title').html().trim()).toEqual(program.name);
-                expect($card.find('.category span').html().trim()).toEqual(program.category);
-                expect($card.find('.organization').html().trim()).toEqual(program.organizations[0].key);
+                expect($card.find('.title').html().trim()).toEqual(program.title);
+                expect($card.find('.category span').html().trim()).toEqual(program.type);
+                expect($card.find('.organization').html().trim()).toEqual(program.authoring_organizations[0].key);
                 expect($card.find('.card-link').attr('href')).toEqual(program.detail_url);
             };
 
@@ -101,9 +115,9 @@ define([
         });
 
         it('should display the correct completed courses message', function() {
-            var program = _.findWhere(userProgress, {id: 146}),
-                completed = program.completed.length,
-                total = completed + program.in_progress.length + program.not_started.length;
+            var program = _.findWhere(userProgress, {uuid: 'a87e5eac-3c93-45a1-a8e1-4c79ca8401c8'}),
+                completed = program.completed,
+                total = completed + program.in_progress + program.not_started;
 
             expect(view.$('.certificate-status .status-text').not('.secondary').html()).toEqual('You have earned certificates in ' + completed + ' of the ' + total + ' courses so far.');
         });

@@ -70,7 +70,7 @@ from courseware.models import StudentModule, BaseStudentModuleHistory
 from courseware.url_helpers import get_redirect_url, get_redirect_url_for_global_staff
 from courseware.user_state_client import DjangoXBlockUserStateClient
 from edxmako.shortcuts import render_to_response, render_to_string, marketing_link
-from openedx.core.djangoapps.catalog.utils import get_programs_with_type
+from openedx.core.djangoapps.catalog.utils import get_program_with_type_and_instructors, get_programs_with_type
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
 from openedx.core.djangoapps.coursetalk.helpers import inject_coursetalk_keys_into_context
 from openedx.core.djangoapps.credit.api import (
@@ -672,6 +672,17 @@ def course_about(request, course_id):
         inject_coursetalk_keys_into_context(context, course_key)
 
         return render_to_response('courseware/course_about.html', context)
+
+
+@ensure_csrf_cookie
+@cache_if_anonymous()
+def program_detail(request, program_id):
+    program = get_program_with_type_and_instructors(program_id)
+
+    if not program:
+        raise Http404
+
+    return HttpResponse(json.dumps(program), content_type='application/json')
 
 
 @transaction.non_atomic_requests

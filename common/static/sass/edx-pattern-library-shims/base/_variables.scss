@@ -181,10 +181,10 @@ $btn-brand-disabled-color:                #676666 !default;
 // Upgrade button
 $btn-upgrade-border-color:                $uxpl-green-base !default;
 $btn-upgrade-background:                  $uxpl-green-base !default;
-$btn-upgrade-color:                       $uxpl-green-base !default;
-$btn-upgrade-focus-color:                 $uxpl-green-base !default;
-$btn-upgrade-focus-border-color:          $uxpl-green-base !default;
-$btn-upgrade-focus-background:            $uxpl-green-base !default;
+$btn-upgrade-color:                       #fcfcfc !default;
+$btn-upgrade-focus-color:                 $btn-upgrade-color !default;
+$btn-upgrade-focus-border-color:          rgb(0, 155, 0) !default;
+$btn-upgrade-focus-background:            rgb(0, 155, 0) !default;
 $btn-upgrade-active-border-color:         $uxpl-green-base !default;
 $btn-upgrade-active-background:           $uxpl-green-base !default;
 

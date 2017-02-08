@@ -60,88 +60,107 @@ div.info-wrapper {
       // This banner uses the Pattern Library's defined variables
       @include border-left(0px);
 
-      background: $homepage-background;
       border: 1px solid $uxpl-gray-background;
       width: 100%;
       display: table;
 
       .notification-color-border {
-        width: 10px; //Value defined by UX team
-        height: 100%;
+        width: 6px; //Value defined by UX team
+        min-height: 100%;
         margin: 0;
-        vertical-align: top;
-        background: $notification-highlight-border-color;
         display: table-cell;
+        background: $notification-highlight-border-color;
       }
 
-      .upgrade-icon {
-        vertical-align: top;
-        margin: $baseline;
-        display: inline-block;
-        img {
-          max-height: 50px; //Defined by UX Team, currently only used here
-        }
-      }
+      .notification-content {
+        display: inline-flex;
+        align-items: center;
+        align-content: flex-start;
+        flex-flow: row wrap;
+        background: $homepage-background;
+        width: 100%;
+        padding: $baseline/2 0;
+        margin-bottom: 0;
+        justify-content: space-between;
 
-      .upgrade-msg {
-        vertical-align: top;
-        margin: $baseline 0;
-        display: inline-block;
+        .upgrade-icon {
+          margin: 0;
+          padding: $baseline/2 $baseline;
+          flex-flow: row nowrap;
+          align-items: center;
+          flex: 7 1 50px;
+          // The following dimensions were added so that the
+          // icon will adjust as the notification is adjusted
+          // but will not be smaller or larger than UX requirements.
+          min-height: 50px;
+          min-width: 80px;
+          max-height: 90px;
+          max-width: 130px;
 
-        .msg-title {
-          font-weight: font-weight(semi-bold);
-          font-size: font-size(large);
-        }
-        .view-verified-info {
-          margin-top: $baseline / 4;
-          font-weight: font-weight(normal);
-          font-size: font-size(base);
-        }
-
-        a:link, a:hover, a:visited, a:active {
-          text-decoration: underline !important;
-        }
-      }
-
-      .upgrade-banner-button {
-        vertical-align: top;
-        display: inline-block;
-        margin: $baseline $baseline*2;
-      }
-
-      .btn-upgrade {
-        @extend %btn-shims;
-
-        border-color: $uxpl-green-base;
-        background: $uxpl-green-base;
-        color: $btn-brand-color;
-
-        // STATE: hover and focus
-        &:hover,
-        &.is-hovered,
-        &:focus,
-        &.is-focused {
-          border-color: $btn-upgrade-focus-border-color;
-          background-color: $btn-upgrade-focus-background;
-          color: $btn-upgrade-focus-color;
+          img{
+            min-height: 50px;
+            min-width: 80px;
+          }
         }
 
-        // STATE: is pressed or active
-        &:active,
-        &:visited,
-        &.is-pressed,
-        &.is-active {
-          border-color: $btn-upgrade-active-border-color;
-          background: $btn-upgrade-active-background;
-          color: $btn-brand-color;
+        .upgrade-msg {
+          flex: 5 1 60%; //This percentage was required to get the text
+                         // in the message to wrap when collapsed.
+          flex-direction: column;
+          margin: 0;
+          padding: 10px 0;
+          .msg-title {
+            font-weight: font-weight(semi-bold);
+            font-size: font-size(large);
+            line-height: $base-line-height;
+          }
+          .view-verified-info {
+            margin-top: $baseline / 4;
+            font-weight: font-weight(normal);
+            font-size: font-size(base);
+          }
+
+          a:link, a:hover, a:visited, a:active {
+            text-decoration: underline !important;
+          }
         }
 
-        // STATE: is disabled
-        &:disabled,
-        &.is-disabled {
-          border-color: $btn-disabled-border-color;
-          background: $btn-brand-disabled-background;
-          color: $btn-brand-color;
+        .upgrade-banner-button {
+          margin: 0;
+          padding: 10px 20px;
+          @include ltr {
+            margin-left: auto;
+            margin-right: $baseline/2;
+          }
+          @include rtl {
+            margin-right: auto;
+            margin-left: $baseline/2;
+          }
+        }
+
+        .btn-upgrade {
+          @extend %btn-shims;
+
+          border-color: $btn-upgrade-border-color;
+          background: $btn-upgrade-background;
+          color: $btn-upgrade-color;
+          // STATE: hover and focus
+          &:hover,
+          &.is-hovered,
+          &:focus,
+          &.is-focused {
+            border-color: $btn-upgrade-focus-border-color;
+            background-color: $btn-upgrade-focus-background;
+            color: $btn-upgrade-focus-color;
+          }
+
+          // STATE: is disabled
+          &:disabled,
+          &.is-disabled {
+            border-color: $btn-disabled-border-color;
+            background: $btn-brand-disabled-background;
+            color: $btn-upgrade-color;
+          }
         }
       }
     }

@@ -36,6 +36,7 @@ class TestGetPrograms(CatalogIntegrationMixin, TestCase):
         self.uuid = str(uuid.uuid4())
         self.marketing_slug = 'foo_bar_program'
         self.type = 'FooBar'
+        self.status = 'active'
         self.catalog_integration = self.create_catalog_integration(cache_ttl=1)
 
         UserFactory(username=self.catalog_integration.service_username)
@@ -70,6 +71,10 @@ class TestGetPrograms(CatalogIntegrationMixin, TestCase):
             querystring['use_full_course_serializer'] = 1
         if type:
             querystring['type'] = type
+        if status:
+            querystring['status'] = status
+        if program_uuid:
+            querystring['use_full_course_serializer'] = True
         self.assertEqual(kwargs['querystring'], querystring)
 
         return args, kwargs
@@ -108,6 +113,15 @@ class TestGetPrograms(CatalogIntegrationMixin, TestCase):
         data = get_programs(type=self.type)
 
         self.assert_contract(mock_get_edx_api_data.call_args, type=self.type)
+        self.assertEqual(data, programs)
+
+    def test_get_programs_by_status(self, mock_get_catalog_data):
+        programs = ProgramFactory.create_batch(2)
+        mock_get_catalog_data.return_value = programs
+
+        data = get_programs(status=self.status)
+
+        self.assert_contract(mock_get_catalog_data.call_args, status=self.status)
         self.assertEqual(data, programs)
 
     def test_programs_unavailable(self, mock_get_edx_api_data):

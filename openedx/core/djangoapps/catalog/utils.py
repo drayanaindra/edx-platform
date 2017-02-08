@@ -32,6 +32,7 @@ def get_programs(uuid=None, marketing_slug=None, type=None):  # pylint: disable=
         uuid (string): UUID identifying a specific program.
         marketing_slug (string): Marketing slug indentifying a specific program.
         type (string): Filter programs by type (e.g., "MicroMasters" will only return MicroMasters programs).
+        status(string): Filter programs by status (e.g., "active", "unpublished" ...).
 
     Returns:
         list of dict, representing programs.
@@ -61,6 +62,10 @@ def get_programs(uuid=None, marketing_slug=None, type=None):  # pylint: disable=
             querystring['use_full_course_serializer'] = 1
         if type:
             querystring['type'] = type
+        if status:
+            querystring['status'] = status
+        if uuid:
+            querystring['use_full_course_serializer'] = 1
 
         return get_edx_api_data(
             catalog_integration,

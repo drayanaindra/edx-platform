@@ -9,7 +9,7 @@ import mock
 from opaque_keys.edx.keys import CourseKey
 
 from openedx.core.djangoapps.catalog.models import CatalogIntegration
-from openedx.core.djangoapps.catalog.tests.factories import ProgramFactory, ProgramTypeFactory
+from openedx.core.djangoapps.catalog.tests.factories import ProgramFactory, ProgramTypeFactory, CourseRunFactory
 from openedx.core.djangoapps.catalog.tests.mixins import CatalogIntegrationMixin
 from openedx.core.djangoapps.catalog.utils import (
     get_programs,
@@ -17,10 +17,13 @@ from openedx.core.djangoapps.catalog.utils import (
     get_program_types,
     get_program_type,
     get_programs_with_type,
+    _get_program_instructors,
     get_program_with_type_and_instructors,
 )
 from openedx.core.djangolib.testing.utils import skip_unless_lms
 from student.tests.factories import UserFactory
+from xmodule.modulestore.tests.factories import CourseFactory
+from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 
 
 UTILS_MODULE = 'openedx.core.djangoapps.catalog.utils'
@@ -206,7 +209,7 @@ class TestMungeCatalogProgram(TestCase):
 
 @skip_unless_lms
 @mock.patch(UTILS_MODULE + '.get_edx_api_data')
-class TestGetProgramTypes(CatalogIntegrationMixin, TestCase):
+class TestGetProgramTypes(CatalogIntegrationMixin, ModuleStoreTestCase):
     """Tests covering retrieval of program types from the catalog service."""
     def setUp(self):
         super(TestGetProgramTypes, self).setUp()
@@ -289,4 +292,31 @@ class TestGetProgramTypes(CatalogIntegrationMixin, TestCase):
 
                     actual = get_program_with_type_and_instructors(program['marketing_slug'])
                     self.assertEqual(actual, program_detail)
+
+    def test_get_program_instructors(self, _mock_get_edx_api_data):
+        """Verify _get_program_instructors returns the expected instructor data."""
+        instructors = {
+            'instructors': [
+                {
+                    'name': 'test-instructor1',
+                    'organization': 'TextX',
+                },
+                {
+                    'name': 'test-instructor2',
+                    'organization': 'TextX',
+                }
+            ]
+        }
+        course = CourseFactory.create(instructor_info=instructors)
+
+        course_run = [CourseRunFactory(key=unicode(course.id))]
+        program = ProgramFactory(courses=[{'course_runs': course_run}])
+
+        actual = _get_program_instructors(program)
+        self.assertListEqual(actual, instructors['instructors'])
+
+
+
+
+
 

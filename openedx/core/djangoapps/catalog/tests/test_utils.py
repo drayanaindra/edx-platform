@@ -314,9 +314,3 @@ class TestGetProgramTypes(CatalogIntegrationMixin, ModuleStoreTestCase):
 
         actual = _get_program_instructors(program)
         self.assertListEqual(actual, instructors['instructors'])
-
-
-
-
-
-
